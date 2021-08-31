@@ -1,0 +1,63 @@
+{% load static %}
+
+<div>
+    <div class="sidebar" style="height: 85%">
+        <div class="logo-content">
+            <a href="{% url 'dashboard' %}">
+                <div class="logo">
+                    <i class="bi bi-list-check logo-icon"></i>
+                    <span>Issue Tracker</span>
+                </div>
+            </a>
+        </div>
+        <div class="project-heading">
+            <b>{{ project_name }}</b>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="{% url 'project_detail' project_slug %}">
+                    <i class="bi bi-collection-fill"></i>
+                    <span>Issues</span>
+                </a>
+            </li>
+            {% if user_member.role > 1 %}
+                <li>
+                    <a href="{% url 'issue_create' project_slug %}">
+                        <i class="bi bi-flag-fill"></i>
+                        <span>Create issue</span>
+                    </a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="{% url 'project_members' project_slug %}">
+                    <i class="bi bi-person-lines-fill"></i>
+                    <span>Members</span>
+                </a>
+            </li>
+            {% if user == project_owner or user_member.role == 3 %}
+                <li>
+                    <a href="{% url 'project_invite_list' project_slug %}">
+                        <i class="bi bi-envelope-fill"></i>
+                        <span>Invites</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if not user == project_owner %}
+                <li>
+                    <a href="{% url 'project_leave' project_slug %}">
+                        <i class="bi bi-door-open-fill"></i>
+                        <span>Leave project</span>
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'project_settings' project_slug %}">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% include 'components/sidebar/sidebar_footer.html' %}
+</div>

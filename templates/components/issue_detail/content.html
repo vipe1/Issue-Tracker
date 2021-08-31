@@ -1,0 +1,61 @@
+{% load issue_extras %}
+
+<div class="list-group">
+    <li class="list-group-item">
+        <b>Issue name</b><br>
+        <span>{{ issue.name }}</span>
+    </li>
+    <li class="list-group-item">
+        <b>Issue description</b><br>
+        <span>{{ issue.description }}</span>
+    </li>
+    <li class="list-group-item flex-space-items-between">
+        <div>
+            <b>Author</b><br>
+            <span>{{ issue.author }}</span>
+        </div>
+        <div>
+            <b>Created at</b><br>
+            <span>{{ issue.created_at }}</span>
+        </div>
+        <div>
+            <b>Assignee</b><br>
+            <span>{{ issue.assignee }}</span>
+        </div>
+    </li>
+    <li class="list-group-item flex-space-items-between" style="overflow: visible">
+        <div>
+            <b>Type</b><br>
+            <span>{{ issue.type|get_issue_type }}</span>
+        </div>
+        <div>
+            <b>Priority</b><br>
+            <span>{{ issue.priority|get_issue_priority }}</span>
+        </div>
+        <div>
+            <b>Status</b><br>
+            <span>{{ issue.status|get_issue_status }}</span>
+        </div>
+        {% if issue.status == 'in_progress' %}
+            {% if user_member.is_owner or user_member.role == 3 or issue.assignee == user %}
+                {% include 'components/issue_detail/status_setter.html' %}
+            {% endif %}
+        {% elif issue.status|is_opened %}
+            {% if user_member.role > 1 %}
+                {% include 'components/issue_detail/status_setter.html' %}
+            {% endif %}
+        {% else %}
+            {% if user_member.is_owner or user_member.role == 3 or issue.author == user %}
+                {% include 'components/issue_detail/status_setter.html' %}
+            {% endif %}
+        {% endif %}
+    </li>
+    {% if user == issue.author or user_member.role == 3 or user == issue.project.owner %}
+        <li class="list-group-item flex-space-items-around">
+            <div class="btn-group" role="group">
+                <a href="{% url 'issue_edit' issue.project.slug issue.slug %}" type="button" class="btn btn-warning">Edit</a>
+                <a href="{% url 'issue_delete' issue.project.slug issue.slug %}" type="button" class="btn btn-danger">Delete</a>
+            </div>
+        </li>
+    {% endif %}
+</div>

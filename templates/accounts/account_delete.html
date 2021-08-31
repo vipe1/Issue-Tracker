@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} - Account delete{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/dashboard_sidebar.html' %}
+        <div class="fullpage-form-wrapper">
+            <h1>Account delete</h1>
+            <form method="post" class="form-confirmation">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Delete my account</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{% static 'js/form_confirmation.js' %}"></script>
+{% endblock scripts %}

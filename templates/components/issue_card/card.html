@@ -1,0 +1,36 @@
+{% load issue_extras %}
+
+<div class="card bg-dark text-white" style="width: 260px; height: 320px">
+    <div class="card-header text-center">
+        <a href="{{ issue.get_absolute_url }}">
+            <b>{{ issue.name }}</b>
+        </a>
+    </div>
+    <div class="card-body">
+        <p class="card-text" title="{{ issue.description }}">{{ issue.description }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-dark text-white">
+            <b>Type</b>: {{ issue.type|get_issue_type }}
+        </li>
+        <li class="list-group-item bg-dark text-white">
+            <b>Priority</b>: {{ issue.priority|get_issue_priority }}
+        </li>
+        <li class="list-group-item bg-dark text-white">
+            <b>Status</b>: {{ issue.status|get_issue_status }}
+        </li>
+        {% if issue.status == 'in_progress' %}
+            {% if user_member.is_owner or user_member.role == 3 or issue.assignee == user %}
+                {% include 'components/issue_card/status_setter.html' %}
+            {% endif %}
+        {% elif issue.status|is_opened %}
+            {% if user_member.role > 1 %}
+                {% include 'components/issue_card/status_setter.html' %}
+            {% endif %}
+        {% else %}
+            {% if user_member.is_owner or user_member.role == 3 or issue.author == user %}
+                {% include 'components/issue_card/status_setter.html' %}
+            {% endif %}
+        {% endif %}
+    </ul>
+</div>

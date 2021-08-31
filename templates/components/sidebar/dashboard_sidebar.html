@@ -1,0 +1,33 @@
+{% load static %}
+
+<div>
+    <div class="sidebar" style="height: 85%">
+        <div class="logo-content">
+            <a href="{% url 'dashboard' %}">
+                <div class="logo">
+                    <i class="bi bi-list-check logo-icon"></i>
+                    <span>Issue Tracker</span>
+                </div>
+            </a>
+        </div>
+        <ul class="nav-list">
+            {% with projects=user.projects %}
+                {% if projects|length > 0 %}
+                    {% for project in projects %}
+                        <li class="sidebar-item">
+                            <a href="{{ project.get_absolute_url }}" style="border: 2px solid {{ project.color }}">
+                                <span class="dashboard-sidebar-project-name">{{ project }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                <li class="sidebar-item">
+                    <a href="{% url 'project_create' %}">
+                        <span>+ Create project</span>
+                    </a>
+                </li>
+            {% endwith %}
+        </ul>
+    </div>
+    {% include 'components/sidebar/sidebar_footer.html' %}
+</div>

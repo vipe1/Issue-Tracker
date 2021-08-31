@@ -1,0 +1,51 @@
+.issue-type-bug {
+    color: crimson;
+}
+
+.issue-type-improvement {
+    color: darkviolet;
+}
+
+.issue-type-task {
+    color: deepskyblue;
+}
+
+.issue-type-new-feature {
+    color: springgreen;
+}
+
+
+
+.issue-priority-highest {
+    color: orangered;
+}
+
+.issue-priority-high {
+    color: orange;
+}
+
+.issue-priority-medium {
+    color: gold;
+}
+
+.issue-priority-low {
+    color: dodgerblue;
+}
+
+.issue-priority-lowest {
+    color: #1e4bff;
+}
+
+
+
+.issue-status-open {
+    background: royalblue;
+}
+
+.issue-status-active {
+    background: orange;
+}
+
+.issue-status-closed {
+    background: forestgreen;
+}

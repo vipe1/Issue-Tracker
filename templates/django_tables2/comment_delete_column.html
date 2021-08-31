@@ -1,0 +1,8 @@
+{% if user == project.owner or user_member.role == 3 or user == record.author %}
+    <form method="post" action="{% url 'comment_delete' issue.project.slug issue.slug record.id %}">
+        {% csrf_token %}
+        <a class="a-tag-form-submit">
+            Delete
+        </a>
+    </form>
+{% endif %}

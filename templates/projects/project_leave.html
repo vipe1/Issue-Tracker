@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} - Leave project{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="fullpage-form-wrapper">
+            <h1>Are you sure you want to leave {{ project_name }}</h1>
+            <form method="post" class="form-confirmation">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Leave project</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{% static 'js/form_confirmation.js' %}"></script>
+{% endblock scripts %}

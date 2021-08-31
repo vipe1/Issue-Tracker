@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block title %} - Project inactive invite{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/dashboard_sidebar.html' %}
+        <div class="fullpage-form-wrapper">
+            {% if invitation.status == 'accepted' %}
+                <h1>Invitation has already been accepted</h1>
+            {% else %}
+                <h1>Invitation has already been declined</h1>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+
+{% block title %} - Project invite{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/dashboard_sidebar.html' %}
+        <div class="fullpage-form-wrapper">
+           {% with project=invitation.project %}
+               {% if user not in project.users %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <h1 class="custom-heading">You've been invited to: {{ project.name }}</h1>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-success" type="submit" name="button_accepted">Accept</button>
+                            <button class="btn btn-danger" type="submit" name="button_declined">Decline</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <h1>You are already in this project</h1>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% load issue_extras %}
+
+{% block title %} - Issue delete{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="fullpage-form-wrapper">
+            <form method="post">
+                <h1>Are you sure you want to delete this issue:</h1>
+                {% csrf_token %}
+                <div class="issue-detail-content">
+                    <div class="list-group">
+                        <li class="list-group-item">
+                            <b>Issue name</b><br>
+                            <span>{{ issue.name }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Issue description</b><br>
+                            <span>{{ issue.description }}</span>
+                        </li>
+                        <li class="list-group-item flex-space-items-between">
+                            <div>
+                                <b>Author</b><br>
+                                <span>{{ issue.author }}</span>
+                            </div>
+                            <div>
+                                <b>Created at</b><br>
+                                <span>{{ issue.created_at }}</span>
+                            </div>
+                            <div>
+                                <b>Assignee</b><br>
+                                <span>{{ issue.assignee }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item flex-space-items-between" style="overflow: visible">
+                            <div>
+                                <b>Type</b><br>
+                                <span>{{ issue.type|get_issue_type }}</span>
+                            </div>
+                            <div>
+                                <b>Priority</b><br>
+                                <span>{{ issue.priority|get_issue_priority }}</span>
+                            </div>
+                            <div>
+                                <b>Status</b><br>
+                                <span>{{ issue.status|get_issue_status }}</span>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <button class="btn btn-danger mt-2" type="submit">Delete issue</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

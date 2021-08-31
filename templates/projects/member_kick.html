@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} - Kick member{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="layout-content">
+            <div class="fullpage-form-wrapper">
+                <h1>Are you sure you want to kick {{ member.user }}?</h1>
+                <form method="post" class="form-confirmation">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Kick</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{% static 'js/form_confirmation.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,19 @@
+<div>
+    <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="margin-top: 10px">
+      Set status
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        <form method="post" action="{% url 'issue_set_status' issue.project.slug issue.slug %}">
+            {% csrf_token %}
+            <li><a class="dropdown-item status-setter" data-new-status="open">Open</a></li>
+            <li><a class="dropdown-item status-setter" data-new-status="reopened">Reopened</a></li>
+            <li><hr class="dropdown-divider"></li>
+
+            <li><a class="dropdown-item status-setter" data-new-status="in_progress">In progress</a></li>
+            <li><hr class="dropdown-divider"></li>
+
+            <li><a class="dropdown-item status-setter" data-new-status="resolved">Resolved</a></li>
+            <li><a class="dropdown-item status-setter" data-new-status="closed">Closed</a></li>
+        </form>
+    </ul>
+</div>

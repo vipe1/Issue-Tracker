@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} - Project issues{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="layout-content">
+            <div id="tab-div">
+                <ul class="nav nav-tabs nav-justified bg-dark text-white" style="padding-right: 1rem" id="issuesTab" role="tablist">
+                    {% if user_member.role > 1 %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="active-issues-tab" data-bs-toggle="tab" data-bs-target="#active-issues" type="button" role="tab">Your active</button>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="open-issues-tab" data-bs-toggle="tab" data-bs-target="#open-issues" type="button" role="tab">Open</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="closed-issues-tab" data-bs-toggle="tab" data-bs-target="#closed-issues" type="button" role="tab">Closed</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="all-issues-tab" data-bs-toggle="tab" data-bs-target="#all-issues" type="button" role="tab">All</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="issuesTabContent">
+                {% if user_member.role > 1 %}
+                    <div class="tab-pane show" id="active-issues" role="tabpanel">
+                        <div class="issue-cards">
+                            {% for issue in project.issues.active %}
+                                {% include 'components/issue_card/card.html' %}
+                            {% empty %}
+                                <h1 class="custom-heading">Currently you have no active issues</h1>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="tab-pane active" id="open-issues" role="tabpanel">
+                    <div class="issue-cards">
+                        {% for issue in project.issues.open %}
+                            {% include 'components/issue_card/card.html' %}
+                        {% empty %}
+                            <h1 class="custom-heading">Currently there are no open issues</h1>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane" id="closed-issues" role="tabpanel">
+                    <div class="issue-cards">
+                        {% for issue in project.issues.closed %}
+                            {% include 'components/issue_card/card.html' %}
+                        {% empty %}
+                            <h1 class="custom-heading">Currently there are no closed issues</h1>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane" id="all-issues" role="tabpanel">
+                    <div class="issue-cards">
+                        {% for issue in project.issues.all %}
+                            {% include 'components/issue_card/card.html' %}
+                        {% empty %}
+                            <h1 class="custom-heading">Currently there are no issues</h1>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{% static 'js/status_setter.js' %}"></script>
+{% endblock scripts %}

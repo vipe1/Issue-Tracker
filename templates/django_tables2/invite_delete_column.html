@@ -1,0 +1,8 @@
+{% if user == project.owner or user_member.role == 3 %}
+    <form method="post" action="{% url 'project_invite_delete' project.slug record.id %}">
+        {% csrf_token %}
+        <a class="a-tag-form-submit">
+            Delete
+        </a>
+    </form>
+{% endif %}

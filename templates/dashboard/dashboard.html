@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} - Dashboard{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/dashboard_sidebar.html' %}
+        <div class="layout-content">
+            <div class="layout-heading">
+                <p>Your active issues from all projects</p>
+            </div>
+            <div class="issue-cards">
+                {% for issue in user.assigned_issues.active %}
+                    {% include 'components/issue_card/card.html' %}
+                {% empty %}
+                    <h1 class="custom-heading">Currently you have no active issues</h1>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/status_setter.js' %}"></script>
+{% endblock %}

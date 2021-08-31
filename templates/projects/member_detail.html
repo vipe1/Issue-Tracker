@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} - Member details{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="layout-content">
+            <div class="fullpage-form-wrapper">
+                <h1>{{ member }}</h1>
+                <div id="member-details">
+                    <div class="issue-detail-content">
+                        <ul class="list-group">
+                            <li class="list-group-item flex-space-items-between">
+                                <b>Joined at</b>
+                                <span>{{ member.joined_at }}</span>
+                            </li>
+                            <li class="list-group-item flex-space-items-between">
+                                <b>Role</b>
+                                {% if member.is_owner %}
+                                    Owner
+                                {% else %}
+                                    <span>{{ member.get_role_display }}</span>
+                                {% endif %}
+                            </li>
+                            {% with owner=member.project.owner %}
+                                {% if user != member.user %}
+                                    {% if not member.is_owner %}
+                                        {% if user == owner %}
+                                            {% include 'components/member_detail/role_setter.html' %}
+                                            <li class="list-group-item flex-space-items-around">
+                                                <a href="{% url 'member_kick' member.project.slug member.id %}">
+                                                    <button class="btn btn-danger">Kick user</button>
+                                                </a>
+                                            </li>
+                                        {% elif user_member.role == 3 and member.role != 3 %}
+                                            {% include 'components/member_detail/role_setter.html' %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script>
+    $(document).ready(function() {
+        $('.role-setter').click(function() {
+            const form = $(this.parentNode.parentNode)
+            const new_role = $(this).data('new-role')
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'new_role',
+                value: new_role
+            }).appendTo(form)
+            $(form).submit()
+        })
+    })
+    </script>
+{% endblock scripts %}

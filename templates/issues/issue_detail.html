@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load django_tables2 %}
+
+{% block title %} - Issue details{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="issue-detail-layout">
+            <div class="issue-detail-content" style="border-right: 1px solid grey">
+                <h1 class="custom-heading">
+                    Details for issue #{{ issue.slug }}
+                </h1>
+                {% include 'components/issue_detail/content.html' %}
+            </div>
+            <div class="issue-detail-sub" style="border-bottom: 1px solid grey">
+                <h1 class="custom-heading">Comments</h1>
+                <div id="comment-create-wrapper">
+                    {% if user_member.role > 1 %}
+                        <form method="post" action="{% url 'comment_create' issue.project.slug issue.slug %}">
+                            {% csrf_token %}
+                            {{ comment_form.content }}
+                            <button type="submit" class="btn btn-sm btn-success">Add comment</button>
+                        </form>
+                    {% endif %}
+                </div>
+                {% render_table tables.0 %}
+            </div>
+            <div class="issue-detail-sub">
+                <h1 class="custom-heading">History</h1>
+                {% render_table tables.1 %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script src="{% static 'js/status_setter.js' %}"></script>
+    <script src="{% static 'js/a_tag_form_submit.js' %}"></script>
+{% endblock scripts %}

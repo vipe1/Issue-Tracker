@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load django_tables2 %}
+
+{% block title %} - Project invites{% endblock title %}
+{% block content %}
+    <div class="layout">
+        {% include 'components/sidebar/project_sidebar.html' %}
+        <div class="layout-content">
+            <div class="fullpage-form-wrapper" style="overflow-y: scroll">
+                <h1>{{ project_name }} invites</h1>
+                <div>
+                    <form method="post" action="{% url 'project_invite_generator' project_slug %}" id="generate-invite">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">
+                            Create invite
+                        </button>
+                    </form>
+                </div>
+                <div class="fullpage-table-wrapper">
+                    {% render_table table %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="status-messages" style="display: none">
+        {% for message in messages %}
+            <span class="status-message" data-status-message-type="{{ message.tags }}">{{ message }}</span>
+        {% endfor %}
+    </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="inviteToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Invite</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <a href="#" id="invitation-link"></a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.status-message').each(function (){
+                const toastLiveExample = $('#inviteToast')
+                const toastInvitationLink = $(toastLiveExample).find('#invitation-link')
+
+                const status_message_type = $(this).data('status-message-type')
+                const text = $(this).text()
+                const toast = new bootstrap.Toast(toastLiveExample);
+
+                if (status_message_type == 'success'){
+                    $(toastInvitationLink).attr('href', text)
+                    $(toastInvitationLink).text('Here is your invite')
+                }
+                else if (status_message_type == 'error'){
+                    $(toastInvitationLink).text(text)
+                }
+                toast.show()
+            })
+        })
+    </script>
+    <script src="{% static 'js/a_tag_form_submit.js' %}"></script>
+{% endblock scripts %}

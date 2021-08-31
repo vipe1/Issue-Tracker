@@ -1,0 +1,17 @@
+<li class="list-group-item flex-space-items-around" style="overflow: visible">
+    <div class="dropdown">
+        <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Set role
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <form method="post" action="{{ member.get_absolute_url }}">
+                {% csrf_token %}
+                {% if user == owner %}
+                    <li><a class="dropdown-item role-setter" data-new-role="admin">Admin</a></li>
+                {% endif %}
+                <li><a class="dropdown-item role-setter" data-new-role="developer">Developer</a></li>
+                <li><a class="dropdown-item role-setter" data-new-role="spectator">Spectator</a></li>
+            </form>
+        </ul>
+    </div>
+</li>
