@@ -17,8 +17,8 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?{% now 'U' %}">
-    <link rel="stylesheet" href="{% static 'css/icon_colors.css' %}?{% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icon_colors.css' %}">
 </head>
 <body>
 <main>
@@ -29,7 +29,7 @@
         {% endblock scripts %}
         <script>
             if($(window).width() < 1280  || $(window).width() < 720){
-                alert('Content may not scale well on devices with less than 1280px width and 720px height')
+                alert('Content may not scale well on windows with less than 1280px width and 720px height')
             }
         </script>
     </div>

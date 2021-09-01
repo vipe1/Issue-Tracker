@@ -27,14 +27,14 @@
                                 {% if user != member.user %}
                                     {% if not member.is_owner %}
                                         {% if user == owner %}
-                                            {% include 'components/member_detail/role_setter.html' %}
+                                            {% include 'components/member_details/role_setter.html' %}
                                             <li class="list-group-item flex-space-items-around">
                                                 <a href="{% url 'member_kick' member.project.slug member.id %}">
                                                     <button class="btn btn-danger">Kick user</button>
                                                 </a>
                                             </li>
                                         {% elif user_member.role == 3 and member.role != 3 %}
-                                            {% include 'components/member_detail/role_setter.html' %}
+                                            {% include 'components/member_details/role_setter.html' %}
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}

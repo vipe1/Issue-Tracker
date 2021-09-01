@@ -24,7 +24,7 @@ class CommentCreateView(HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, De
 
 
 class CommentDeleteView(HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, DetailView):
-    model = Issue  # Same case as in MemberDetailView
+    model = Issue  # Same case as in MemberDetailsView
 
     def post(self, request, *args, **kwargs):
         comment = get_object_or_404(Comment, issue=self.get_object(), id=self.kwargs.get('comment_id'))

@@ -30,7 +30,7 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('project_detail', args=[self.slug])
+        return reverse('project_details', args=[self.slug])
 
 
 class Member(models.Model):
@@ -59,7 +59,7 @@ class Member(models.Model):
         return f'{self.project} - {self.user}'
 
     def get_absolute_url(self):
-        return reverse('member_detail', args=[self.project.slug, self.id])
+        return reverse('member_details', args=[self.project.slug, self.id])
 
     @property
     def is_owner(self):

@@ -130,3 +130,6 @@ dmypy.json
 
 # IDE folder
 .idea/
+
+# My quick access folder
+FILES_TO_IGNORE/

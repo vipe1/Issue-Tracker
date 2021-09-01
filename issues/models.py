@@ -65,7 +65,7 @@ class Issue(models.Model):
         super(Issue, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('issue_detail', args=[self.project.slug, self.slug])
+        return reverse('issue_details', args=[self.project.slug, self.slug])
 
 
 class Comment(models.Model):

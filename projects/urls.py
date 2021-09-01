@@ -1,7 +1,7 @@
 from django.urls import path, include
 
-from .views import ProjectDetailView, ProjectCreateView, ProjectSettingsView, ProjectDeleteView, ProjectInviteView, \
-    ProjectInviteGeneratorView, ProjectMemberListView, MemberDetailView, MemberKickView, ProjectInviteListView, \
+from .views import ProjectDetailsView, ProjectCreateView, ProjectSettingsView, ProjectDeleteView, ProjectInviteView, \
+    ProjectInviteGeneratorView, ProjectMemberListView, MemberDetailsView, MemberKickView, ProjectInviteListView, \
     ProjectInviteDeleteView, ProjectLeaveView
 
 urlpatterns = [
@@ -11,7 +11,7 @@ urlpatterns = [
 
 
         path('<slug:project_slug>/', include([
-            path('', ProjectDetailView.as_view(), name='project_detail'),
+            path('', ProjectDetailsView.as_view(), name='project_details'),
             path('settings', ProjectSettingsView.as_view(), name='project_settings'),
             path('delete', ProjectDeleteView.as_view(), name='project_delete'),
             path('leave', ProjectLeaveView.as_view(), name='project_leave'),
@@ -26,7 +26,7 @@ urlpatterns = [
             path('members/', include([
                 path('', ProjectMemberListView.as_view(), name='project_members'),
                 path('<int:member_id>/', include([
-                    path('', MemberDetailView.as_view(), name='member_detail'),
+                    path('', MemberDetailsView.as_view(), name='member_details'),
                     path('kick', MemberKickView.as_view(), name='member_kick'),
                 ])),
             ])),

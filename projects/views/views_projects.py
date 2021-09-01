@@ -18,13 +18,13 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', args=[self.object.slug])
+        return reverse_lazy('project_details', args=[self.object.slug])
 
 
-class ProjectDetailView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
+class ProjectDetailsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
     model = Project
     context_object_name = 'project'
-    template_name = 'projects/project_detail.html'
+    template_name = 'projects/project_details.html'
 
 
 class ProjectSettingsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserIsOwnerMixin, UpdateView):
@@ -33,7 +33,7 @@ class ProjectSettingsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserIsOwne
     fields = ('name', 'color')
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', args=[self.object.slug])
+        return reverse_lazy('project_details', args=[self.object.slug])
 
 
 class ProjectDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, UserIsOwnerMixin, DeleteView):

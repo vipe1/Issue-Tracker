@@ -35,8 +35,8 @@ class ProjectInviteView(LoginRequiredMixin, DetailView):
     def get_template_names(self):
         status = self.object.status
         if status == 'active':
-            return ['projects/project_invite_active.html']
-        return ['projects/project_invite_inactive.html']
+            return ['projects/invites/project_invite_active.html']
+        return ['projects/invites/project_invite_inactive.html']
 
 
 class ProjectInviteGeneratorView(MemberIsAdminOrOwnerMixin, View):
@@ -55,7 +55,7 @@ class ProjectInviteGeneratorView(MemberIsAdminOrOwnerMixin, View):
 
 
 class ProjectInviteListView(ProjectSidebarLinks, SingleTableMixin, MemberIsAdminOrOwnerMixin, TemplateView):
-    template_name = 'projects/project_invite_list.html'
+    template_name = 'projects/invites/project_invite_list.html'
     table_class = InvitationTable
 
     def get_table_data(self):

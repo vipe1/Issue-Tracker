@@ -38,15 +38,15 @@
         </div>
         {% if issue.status == 'in_progress' %}
             {% if user_member.is_owner or user_member.role == 3 or issue.assignee == user %}
-                {% include 'components/issue_detail/status_setter.html' %}
+                {% include 'components/issue_details/status_setter.html' %}
             {% endif %}
         {% elif issue.status|is_opened %}
             {% if user_member.role > 1 %}
-                {% include 'components/issue_detail/status_setter.html' %}
+                {% include 'components/issue_details/status_setter.html' %}
             {% endif %}
         {% else %}
             {% if user_member.is_owner or user_member.role == 3 or issue.author == user %}
-                {% include 'components/issue_detail/status_setter.html' %}
+                {% include 'components/issue_details/status_setter.html' %}
             {% endif %}
         {% endif %}
     </li>

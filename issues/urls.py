@@ -1,13 +1,13 @@
 from django.urls import path, include
 
-from .views import IssueDetailView, IssueEditView, IssueDeleteView, IssueSetStatusView, IssueCreateView,\
+from .views import IssueDetailsView, IssueEditView, IssueDeleteView, IssueSetStatusView, IssueCreateView,\
     CommentCreateView, CommentDeleteView
 
 urlpatterns = [
     path('issue-create', IssueCreateView.as_view(), name='issue_create'),
 
     path('<slug:issue_slug>/', include([
-        path('', IssueDetailView.as_view(), name='issue_detail'),
+        path('', IssueDetailsView.as_view(), name='issue_details'),
         path('edit', IssueEditView.as_view(), name='issue_edit'),
         path('delete', IssueDeleteView.as_view(), name='issue_delete'),
         path('set-status', IssueSetStatusView.as_view(), name='issue_set_status'),

@@ -11,10 +11,10 @@ from projects.models import Project, Member
 from ..tables import CommentTable, HistoryTable
 
 
-class IssueDetailView(ProjectSidebarLinks, MultiTableMixin, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
+class IssueDetailsView(ProjectSidebarLinks, MultiTableMixin, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
     model = Issue
     context_object_name = 'issue'
-    template_name = 'issues/issue_detail.html'
+    template_name = 'issues/issue_details.html'
 
     def get_comments(self):
         return CommentTable(self.get_object().comments.all())
@@ -44,7 +44,7 @@ class IssueDetailView(ProjectSidebarLinks, MultiTableMixin, HierarchicalSlugMixi
             self.get_comments(),
             self.get_history()
         ]
-        return super(IssueDetailView, self).dispatch(request, *args, **kwargs)
+        return super(IssueDetailsView, self).dispatch(request, *args, **kwargs)
 
 
 class IssueCreateView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, CreateView):
@@ -71,7 +71,7 @@ class IssueCreateView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectM
         issue.project = project
         issue.save()
 
-        return redirect('project_detail', project_slug)
+        return redirect('project_details', project_slug)
 
 
 class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssue, UpdateView):
@@ -80,7 +80,7 @@ class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControl
     template_name = 'issues/issue_edit.html'
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', args=[self.object.project.slug])
+        return reverse_lazy('project_details', args=[self.object.project.slug])
 
 
 class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssue, DeleteView):
@@ -88,7 +88,7 @@ class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanContr
     template_name = 'issues/issue_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', args=[self.object.project.slug])
+        return reverse_lazy('project_details', args=[self.object.project.slug])
 
 
 class IssueSetStatusView(MemberIsDeveloperOrOwnerMixin, View):

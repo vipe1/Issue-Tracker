@@ -10,7 +10,7 @@ from ..tables import UserTable
 
 
 class ProjectMemberListView(ProjectSidebarLinks, SingleTableMixin, UserInProjectMixin, TemplateView):
-    template_name = 'projects/project_members.html'
+    template_name = 'projects/members/members_list.html'
     table_class = UserTable
 
     def get_table_data(self):
@@ -18,7 +18,7 @@ class ProjectMemberListView(ProjectSidebarLinks, SingleTableMixin, UserInProject
         return Member.objects.filter(project=project)  # I could do it in one line but it would be barely readable
 
 
-class MemberDetailView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
+class MemberDetailsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, DetailView):
     """
     'model = Project' may be confusing but it's actually what makes this view work properly.
     Basically, if we would get 'model = Member' the 'project_slug' wouldn't matter
@@ -28,10 +28,10 @@ class MemberDetailView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProject
     the Member is actually seen only from proper 'project_slug'.
     """
     model = Project
-    template_name = 'projects/member_detail.html'
+    template_name = 'projects/members/member_details.html'
 
     def get_object(self, queryset=None):
-        project = super(MemberDetailView, self).get_object()
+        project = super(MemberDetailsView, self).get_object()
         member = project.members.filter(id=self.kwargs.get('member_id')).first()
         if member is None:
             raise Http404
@@ -68,12 +68,12 @@ class MemberDetailView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProject
 
         member.role = role
         member.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(member.get_absolute_url())
 
 
 class MemberKickView(ProjectSidebarLinks, HierarchicalSlugMixin, UserPassesTestMixin, DetailView):
     model = Project
-    template_name = 'projects/member_kick.html'
+    template_name = 'projects/members/member_kick.html'
 
     def get_object(self, queryset=None):
         project = super(MemberKickView, self).get_object()

@@ -5,7 +5,7 @@ from .models import Member, ProjectInvitation
 
 class UserTable(tables.Table):
     details = tables.columns.LinkColumn(
-        'member_detail',
+        'member_details',
         args=[A('project.slug'), A('pk')],
         text='Details'
     )

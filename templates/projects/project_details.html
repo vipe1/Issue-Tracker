@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load project_extras %}
 
 {% block title %} - Project issues{% endblock title %}
 {% block content %}
@@ -28,7 +29,7 @@
                 {% if user_member.role > 1 %}
                     <div class="tab-pane show" id="active-issues" role="tabpanel">
                         <div class="issue-cards">
-                            {% for issue in project.issues.active %}
+                            {% for issue in project.issues.active|issues_assigned_to_user:user %}
                                 {% include 'components/issue_card/card.html' %}
                             {% empty %}
                                 <h1 class="custom-heading">Currently you have no active issues</h1>

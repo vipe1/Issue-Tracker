@@ -33,6 +33,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    '0.0.0.0',
 ]
 
 GOOGLE_RECAPTCHA_SITE_KEY = env('CAPTCHA_SITE_KEY')
