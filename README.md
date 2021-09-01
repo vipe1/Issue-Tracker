@@ -6,6 +6,7 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Docker](#docker)
+* [App screenshots](#app-screenshots)
 
 ## General info
 This is issue tracking app made for organising work on projects.
@@ -57,3 +58,20 @@ If you don't want to use Sendgrid you can use Django's Console Email by setting
 
 ## Docker
 Docker container image coming soon...
+
+## App screenshots
+* Invite page
+![Invite](/screenshots/its-invite.png?raw=true "Invite")
+
+* Members page
+![Members](/screenshots/its-members.png?raw=true "Members")
+
+* Member details page
+![Member details](/screenshots/its-member-details.png?raw=true "Member details")
+
+* Issue details page
+![Issue details](/screenshots/its-issue-details.png?raw=true "Issue details")
+
+* Dashboard page
+![Dashboard](/screenshots/its-dashboard.png?raw=true "Dashboard")
+

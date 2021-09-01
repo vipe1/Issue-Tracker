@@ -9,7 +9,7 @@
             {% csrf_token %}
             {{ form|crispy }}
             <input type="hidden" name="g-recaptcha-response" id="recaptcha" style="visibility: visible !important;">
-            <button class="btn btn-success" type="submit">Sign ip</button>
+            <button class="btn btn-success" type="submit">Sign up</button>
         </form>
         <div class="btn-group redirect-buttons" role="group">
             <a href="{% url 'login' %}" type="button" class="btn btn-danger">Log in</a>
