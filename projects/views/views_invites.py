@@ -75,4 +75,4 @@ class ProjectInviteDeleteView(MemberIsAdminOrOwnerMixin, View):
             id=kwargs.get('invite_id')
         )
         invitation.delete()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(reverse_lazy('project_invite_list', args=[invitation.project.slug]))

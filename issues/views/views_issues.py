@@ -47,13 +47,14 @@ class IssueDetailsView(ProjectSidebarLinks, MultiTableMixin, HierarchicalSlugMix
         return super(IssueDetailsView, self).dispatch(request, *args, **kwargs)
 
 
-class IssueCreateView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProjectMixin, CreateView):
+class IssueCreateView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, CreateView):
     form_class = IssueCreateEditForm
     template_name = 'issues/issue_create.html'
 
     def post(self, request, *args, **kwargs):
         form = IssueCreateEditForm(request.POST)
         if not form.is_valid():
+            print(form.cleaned_data)
             return HttpResponse(status=400)
 
         project_slug = kwargs.get('project_slug')
@@ -80,7 +81,7 @@ class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControl
     template_name = 'issues/issue_edit.html'
 
     def get_success_url(self):
-        return reverse_lazy('project_details', args=[self.object.project.slug])
+        return self.object.get_absolute_url()
 
 
 class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssue, DeleteView):
@@ -88,7 +89,7 @@ class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanContr
     template_name = 'issues/issue_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('project_details', args=[self.object.project.slug])
+        return self.object.project.get_absolute_url()
 
 
 class IssueSetStatusView(MemberIsDeveloperOrOwnerMixin, View):

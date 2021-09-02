@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import Http404, get_object_or_404
 from django.utils.translation import gettext as _
 
@@ -60,19 +60,19 @@ class ProjectSidebarLinks:
         return context
 
 
-class MemberIsAdminOrOwnerMixin(UserPassesTestMixin):
+class MemberIsAdminOrOwnerMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         member = get_object_or_404(Member, project__slug=self.kwargs.get('project_slug'), user=self.request.user)
         return member.is_owner or member.role == 3
 
 
-class MemberIsDeveloperOrOwnerMixin(UserPassesTestMixin):
+class MemberIsDeveloperOrOwnerMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         member = get_object_or_404(Member, project__slug=self.kwargs.get('project_slug'), user=self.request.user)
         return member.is_owner or member.role > 1
 
 
-class MemberCanControlIssue(UserPassesTestMixin):
+class MemberCanControlIssue(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         member = get_object_or_404(Member, project__slug=self.kwargs.get('project_slug'), user=self.request.user)
         return member.is_owner or member.role == 3 or self.get_object().author == self.request.user

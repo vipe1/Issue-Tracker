@@ -72,7 +72,7 @@ class ProjectMemberListViewTest(BasicTestsMixin, MembersTestBase):
         self.assertEqual(resp.status_code, 403)
 
 
-class ProjectMemberDetailsViewTest(BasicTestsMixin, MembersTestBase):
+class MemberDetailsViewTest(BasicTestsMixin, MembersTestBase):
     def setUp(self):
         super().setUp()
         self.member = Member.objects.filter(project=self.project, user=self.user2).first()
@@ -125,6 +125,7 @@ class ProjectMemberDetailsViewTest(BasicTestsMixin, MembersTestBase):
                 for role in ('spectator', 'developer', 'admin'):
                     resp = self.client.post(member.get_absolute_url(), {'new_role': role})
                     self.assertEqual(resp.status_code, 403)
+                    self.assertEqual(Member.objects.get(id=member.id).role, member.role)
 
         for user in (self.user2, self.user3):
             self.client.force_login(user)
@@ -132,9 +133,54 @@ class ProjectMemberDetailsViewTest(BasicTestsMixin, MembersTestBase):
                 for member in self.project.members.filter(Q(role=3) | Q(user=self.project.owner)):
                     resp = self.client.post(member.get_absolute_url(), {'new_role': role})
                     self.assertEqual(resp.status_code, 403)
+                    self.assertEqual(Member.objects.get(id=member.id).role, member.role)
 
         self.client.force_login(self.user1)
         member = self.project.members.get(user=self.user1)
         for role in ('spectator', 'developer', 'admin'):
             resp = self.client.post(member.get_absolute_url(), {'new_role': role})
             self.assertEqual(resp.status_code, 403)
+            self.assertEqual(Member.objects.get(id=member.id).role, member.role)
+
+
+    def test_POST_set_invalid_role(self):
+        member = Member.objects.get(project=self.project, user=self.user4)
+        resp = self.client.post(member.get_absolute_url(), {'new_role': 'owner'})
+        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(member.role, Member.objects.get(id=member.id).role)
+
+
+class MemberKickViewTest(BasicTestsMixin, MembersTestBase):
+    def setUp(self):
+        super().setUp()
+        self.member = Member.objects.filter(project=self.project, user=self.user2).first()
+        self.desired_manual_url = f'/project/{self.project.slug}/members/{self.member.id}/kick'
+        self.desired_reverse_url = reverse('member_kick', args=[self.project.slug, self.member.id])
+        self.desired_template = 'projects/members/member_kick.html'
+        self.expected_redirect_url = '/login/?next=' + self.desired_manual_url
+
+    def test_inaccessible_by_non_logged_user(self):
+        self.client.logout()
+        resp = self.client.get(self.desired_reverse_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.expected_redirect_url)
+
+    def test_POST_kick_user(self):
+        resp = self.client.post(self.desired_reverse_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, f'/project/{self.project.slug}/members/')
+        self.assertTrue(self.member not in self.project.members.all())
+
+    def test_POST_unauthorized_member_kick(self):
+        def get_member_kick_url(_member):
+            return reverse('member_kick', args=[_member.project.slug, _member.id])
+
+        member = self.project.members.get(user=self.user1)
+        resp = self.client.post(get_member_kick_url(member))
+        self.assertEqual(resp.status_code, 403)
+
+        for user in (self.user5, self.user4, self.user3, self.user2):
+            self.client.force_login(user)
+            for member in self.project.members.all():
+                resp = self.client.post(get_member_kick_url(member))
+                self.assertEqual(resp.status_code, 403)

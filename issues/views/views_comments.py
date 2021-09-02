@@ -20,7 +20,7 @@ class CommentCreateView(HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, De
             comment.author = request.user
             comment.issue = self.get_object()
             comment.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(comment.issue.get_absolute_url())
 
 
 class CommentDeleteView(HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, DetailView):
@@ -32,4 +32,4 @@ class CommentDeleteView(HierarchicalSlugMixin, MemberIsDeveloperOrOwnerMixin, De
         if not member.is_owner and member.role != 3 and request.user != comment.author:
             return HttpResponse(status=403)
         comment.delete()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(comment.issue.get_absolute_url())
