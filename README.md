@@ -59,7 +59,7 @@ If you don't want to use Sendgrid you can use Django's Console Email by setting
 ## Docker Compose
 To run Issue Tracker with Docker Compose you have to first - edit docker-compose.yml and edit commented environmental variables:
 * Generate secret key with any tool you want, I've followed [this](https://stackoverflow.com/questions/41298963/is-there-a-function-for-generating-settings-secret-key-in-django)
-* Generate Google reCAPTCHA v3 [here](https://www.google.com/recaptcha/admin)
+* Generate Google reCAPTCHA v3 token [here](https://www.google.com/recaptcha/admin)
 * Generate Sendgrid API Key [here](https://app.sendgrid.com)
 
 Then run these commands: 
