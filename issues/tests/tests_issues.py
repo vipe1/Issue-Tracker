@@ -221,6 +221,7 @@ class IssueSetStatusViewTest(IssuesTestBase):
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, self.start_url)
         self.assertEqual(Issue.objects.get(id=self.issue1.id).assignee, self.user1)
+        self.assertEqual(Issue.objects.get(id=self.issue1.id).status, 'in_progress')
 
         self.client.force_login(self.user4)
         resp = self.client.post(self.desired_reverse_url, {'new_status': 'closed'}, HTTP_REFERER=self.start_url)
@@ -228,5 +229,76 @@ class IssueSetStatusViewTest(IssuesTestBase):
 
         self.client.force_login(self.user3)
         resp = self.client.post(self.desired_reverse_url, {'new_status': 'closed'}, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.start_url)
+
+
+class IssueAssignUserViewTest(IssuesTestBase):
+    def setUp(self):
+        super().setUp()
+        self.desired_manual_url = f'/project/{self.project.slug}/i/{self.issue1.slug}/assign-user'
+        self.desired_reverse_url = reverse('issue_assign_user', args=[self.project.slug, self.issue1.slug])
+        self.expected_redirect_url = '/login/?next=' + self.desired_manual_url
+        self.start_url = self.project.get_absolute_url()
+        self.new_assignee = {
+            'new_assignee': self.user4.id
+        }
+        self.client.force_login(self.user3)
+
+    def test_accessible_by_url(self):
+        resp = self.client.post(self.desired_manual_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.start_url)
+
+    def test_accessible_by_reverse_name(self):
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.start_url)
+
+    def test_manual_and_reverse_name_url_are_same(self):
+        self.assertEqual(self.desired_manual_url, self.desired_reverse_url)
+
+    def test_POST_issue_assign_user(self):
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.start_url)
+        self.assertEqual(Issue.objects.get(id=self.issue1.id).assignee, self.user4)
+
+    def test_POST_bad_request(self):
+        resp = self.client.post(self.desired_reverse_url, {'new_assignee': self.user6.id}, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 400)
+
+        resp = self.client.post(self.desired_reverse_url, {'new_assignee': self.user5.id}, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_POST_non_member(self):
+        self.client.force_login(self.user6)
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 404)
+
+    def test_POST_unauthorized_member(self):
+        self.client.force_login(self.user4)
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 403)
+
+        self.client.force_login(self.user5)
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 403)
+
+    def test_POST_assigned_issue(self):
+        self.assertIsNone(Issue.objects.get(id=self.issue1.id).assignee)
+
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, self.start_url)
+        self.assertEqual(Issue.objects.get(id=self.issue1.id).assignee, self.user4)
+        self.assertEqual(Issue.objects.get(id=self.issue1.id).status, 'in_progress')
+
+        self.client.force_login(self.user4)
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
+        self.assertEqual(resp.status_code, 403)
+
+        self.client.force_login(self.user3)
+        resp = self.client.post(self.desired_reverse_url, self.new_assignee, HTTP_REFERER=self.start_url)
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, self.start_url)

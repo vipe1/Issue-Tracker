@@ -6,6 +6,7 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Docker Compose](#docker-compose)
+* [App screenshots](#app-screenshots)
 
 ## General info
 This is issue tracking app made for organising work on projects.
@@ -16,8 +17,8 @@ Every team consists of members who have one of the 3 roles (excluding project's 
 * Spectator
 
 Members can create issues which can have different types, priorities and statuses (based on Jira issue system).
-Every issue has it's history and comments.
-Every user has his own dashboard where he can see all of the active issues asssigned to him.
+Every issue has its history and comments.
+Every user has his own dashboard where he can see all the active issues asssigned to him.
 Creating new users is protected with [Google reCAPTCHA V3](https://developers.google.com/recaptcha/docs/v3)
 
 ## Technologies
@@ -76,3 +77,20 @@ If Django throws database connection error just restart Docker Compose with:
 $ docker-compose down
 $ docker-compose up
 ```
+
+## App screenshots
+* Invite page
+![Invite](/screenshots/its-invite.png?raw=true "Invite")
+
+* Members page
+![Members](/screenshots/its-members.png?raw=true "Members")
+
+* Member details page
+![Member details](/screenshots/its-member-details.png?raw=true "Member details")
+
+* Issue details page
+![Issue details](/screenshots/its-issue-details.png?raw=true "Issue details")
+
+* Dashboard page
+![Dashboard](/screenshots/its-dashboard.png?raw=true "Dashboard")
+

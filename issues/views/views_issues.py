@@ -1,10 +1,11 @@
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, View
-from django.urls import reverse_lazy
 from django.shortcuts import HttpResponse, HttpResponseRedirect, get_object_or_404, redirect
 from django_tables2 import MultiTableMixin
+from django.apps import apps
+from django.db.models import Q
 
 from custom.mixins import HierarchicalSlugMixin, UserInProjectMixin, ProjectSidebarLinks, \
-    MemberIsDeveloperOrOwnerMixin, MemberCanControlIssue
+    MemberIsDeveloperOrOwnerMixin, MemberCanControlIssueMixin
 from issues.models import Issue
 from issues.forms import IssueCreateEditForm, CommentCreateForm
 from projects.models import Project, Member
@@ -37,6 +38,12 @@ class IssueDetailsView(ProjectSidebarLinks, MultiTableMixin, HierarchicalSlugMix
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentCreateForm()
+
+        project = get_object_or_404(Project, slug=self.kwargs.get('project_slug'))
+        context['assignable_users'] = Member.objects.filter(~Q(role=1), project=project)
+        if project.owner not in context['assignable_users']:
+            context['assignable_users'] |= Member.objects.filter(project=project, user=project.owner)
+
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -75,7 +82,7 @@ class IssueCreateView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberIsDevelo
         return redirect('project_details', project_slug)
 
 
-class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssue, UpdateView):
+class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssueMixin, UpdateView):
     model = Issue
     form_class = IssueCreateEditForm
     template_name = 'issues/issue_edit.html'
@@ -84,7 +91,7 @@ class IssueEditView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControl
         return self.object.get_absolute_url()
 
 
-class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssue, DeleteView):
+class IssueDeleteView(ProjectSidebarLinks, HierarchicalSlugMixin, MemberCanControlIssueMixin, DeleteView):
     model = Issue
     template_name = 'issues/issue_delete.html'
 
@@ -122,6 +129,34 @@ class IssueSetStatusView(MemberIsDeveloperOrOwnerMixin, View):
             issue.assignee = request.user
         elif new_status in ('open', 'reopened'):
             issue.assignee = None
+        issue.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class IssueAssignUserView(View):
+    def post(self, request, *args, **kwargs):
+        project = get_object_or_404(Project, slug=kwargs.get('project_slug'))
+        member = get_object_or_404(Member, project=project, user=request.user)
+        issue = get_object_or_404(
+            Issue,
+            project=project,
+            slug=kwargs.get('issue_slug')
+        )
+        new_assignee_id = request.POST['new_assignee']
+
+        if not member.is_owner and member.role != 3:
+            return HttpResponse(status=403)
+        assignee = apps.get_model('users.CustomUser').objects.filter(id=new_assignee_id).first()
+        if assignee not in project.users:
+            return HttpResponse(status=400)
+        new_assignee_member = Member.objects.filter(project=project, user=assignee).first()
+        if not new_assignee_member.is_owner and new_assignee_member.role == 1:
+            return HttpResponse(status=400)
+
+        issue.assignee = assignee
+        if issue.status in ('open', 'reopened'):
+            issue.status = 'in_progress'
         issue.save()
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

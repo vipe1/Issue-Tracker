@@ -1,0 +1,15 @@
+<div class="dropdown">
+    <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Assign user
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        <form method="post" action="{% url 'issue_assign_user' issue.project.slug issue.slug %}">
+            {% csrf_token %}
+                {% for assignable_user in assignable_users %}
+                <li><a class="dropdown-item user-assigner" data-new-assignee="{{ assignable_user.user.id }}">
+                    {{ assignable_user.user }}
+                </a></li>
+            {% endfor %}
+        </form>
+    </ul>
+</div>

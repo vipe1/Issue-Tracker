@@ -356,6 +356,10 @@ a {
     cursor: pointer;
 }
 
+.user-assigner {
+    cursor: pointer;
+}
+
 .project-heading {
     display: flex;
     justify-content: center;
