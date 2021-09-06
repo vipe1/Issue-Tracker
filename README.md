@@ -5,8 +5,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Docker](#docker)
-* [App screenshots](#app-screenshots)
+* [Docker Compose](#docker-compose)
 
 ## General info
 This is issue tracking app made for organising work on projects.
@@ -45,6 +44,7 @@ SECRET_KEY=
 DATABASE_NAME=
 DATABASE_USER=
 DATABASE_PASS=
+DATABASE_HOST=
 
 CAPTCHA_SITE_KEY=
 CAPTCHA_SECRET_KEY=
@@ -56,22 +56,23 @@ FROM_EMAIL=
 If you don't want to use Sendgrid you can use Django's Console Email by setting
 `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
 
-## Docker
-Docker container image coming soon...
+## Docker Compose
+To run Issue Tracker with Docker Compose you have to first - edit docker-compose.yml and edit commented environmental variables:
+* Generate secret key with any tool you want, I've followed [this](https://stackoverflow.com/questions/41298963/is-there-a-function-for-generating-settings-secret-key-in-django)
+* Generate Google reCAPTCHA v3 [here](https://www.google.com/recaptcha/admin)
+* Generate Sendgrid API Key [here](https://app.sendgrid.com)
 
-## App screenshots
-* Invite page
-![Invite](/screenshots/its-invite.png?raw=true "Invite")
-
-* Members page
-![Members](/screenshots/its-members.png?raw=true "Members")
-
-* Member details page
-![Member details](/screenshots/its-member-details.png?raw=true "Member details")
-
-* Issue details page
-![Issue details](/screenshots/its-issue-details.png?raw=true "Issue details")
-
-* Dashboard page
-![Dashboard](/screenshots/its-dashboard.png?raw=true "Dashboard")
-
+Then run these commands: 
+```
+$ docker-compose run django python manage.py migrate
+$ docker-compose up
+```
+If you get permission denied on Linux, this worked for me:
+```
+$ sudo chown $USER:$USER .
+```
+If Django throws database connection error just restart Docker Compose with:
+```
+$ docker-compose down
+$ docker-compose up
+```

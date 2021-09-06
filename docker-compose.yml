@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+    django:
+        build: .
+        container_name: django
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            -   .:/usr/src/app
+        ports:
+            -   "8000:8000"
+        environment:
+            - SECRET_KEY=###
+
+            - DATABASE_NAME=postgres
+            - DATABASE_USER=postgres
+            - DATABASE_PASS=postgres
+            - DATABASE_HOST=pgdb
+
+            - CAPTCHA_SITE_KEY=###
+            - CAPTCHA_SECRET_KEY=###
+
+            - SENDGRID_API_KEY=###
+            - FROM_EMAIL=###
+
+    pgdb:
+        image: postgres
+        container_name: pgdb
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            -   ./data/db:/var/lib/postgresql/data
+        ports:
+            -   "5432:5432"
+

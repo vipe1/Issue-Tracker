@@ -133,3 +133,6 @@ dmypy.json
 
 # My quick access folder
 FILES_TO_IGNORE/
+
+# Docker-compose postgres local folder
+data/
