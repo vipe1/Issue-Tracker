@@ -23,7 +23,7 @@
             <span>{{ issue.assignee }}</span>
         </div>
     </li>
-    <li class="list-group-item flex-space-items-between" style="overflow: visible">
+    <li class="list-group-item flex-space-items-between">
         <div>
             <b>Type</b><br>
             <span>{{ issue.type|get_issue_type }}</span>
@@ -36,6 +36,8 @@
             <b>Status</b><br>
             <span>{{ issue.status|get_issue_status }}</span>
         </div>
+    </li>
+    <li class="list-group-item flex-space-items-around" style="overflow: visible; align-items: end">
         {% if issue.status == 'in_progress' %}
             {% if user_member.is_owner or user_member.role == 3 or issue.assignee == user %}
                 {% include 'components/issue_details/status_setter.html' %}
@@ -48,6 +50,9 @@
             {% if user_member.is_owner or user_member.role == 3 or issue.author == user %}
                 {% include 'components/issue_details/status_setter.html' %}
             {% endif %}
+        {% endif %}
+        {% if user_member.role == 3 or user_member.is_owner %}
+            {% include 'components/issue_details/user_assigner.html' %}
         {% endif %}
     </li>
     {% if user == issue.author or user_member.role == 3 or user == issue.project.owner %}

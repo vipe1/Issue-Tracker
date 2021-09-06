@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import Http404, get_object_or_404
 from django.utils.translation import gettext as _
-
 from projects.models import Project, Member
 
 
@@ -72,7 +71,7 @@ class MemberIsDeveloperOrOwnerMixin(LoginRequiredMixin, UserPassesTestMixin):
         return member.is_owner or member.role > 1
 
 
-class MemberCanControlIssue(LoginRequiredMixin, UserPassesTestMixin):
+class MemberCanControlIssueMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         member = get_object_or_404(Member, project__slug=self.kwargs.get('project_slug'), user=self.request.user)
         return member.is_owner or member.role == 3 or self.get_object().author == self.request.user
