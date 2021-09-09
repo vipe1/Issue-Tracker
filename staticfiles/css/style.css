@@ -412,3 +412,13 @@ a {
     left: 0;
     transform: translate(+50%);
 }
+
+#sort-dropdown-button {
+    background: var(--ligth-blackish-color);
+}
+
+#dashboard-sort {
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
