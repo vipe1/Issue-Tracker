@@ -23,13 +23,16 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="all-issues-tab" data-bs-toggle="tab" data-bs-target="#all-issues" type="button" role="tab">All</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        {% include 'components/issues_sort_dropdown.html' %}
+                    </li>
                 </ul>
             </div>
             <div class="tab-content" id="issuesTabContent">
                 {% if user_member.role > 1 %}
                     <div class="tab-pane show" id="active-issues" role="tabpanel">
                         <div class="issue-cards">
-                            {% for issue in project.issues.active|issues_assigned_to_user:user %}
+                            {% for issue in project.issues.active|issues_assigned_to_user:user|issues_sort:sort_by  %}
                                 {% include 'components/issue_card/card.html' %}
                             {% empty %}
                                 <h1 class="custom-heading">Currently you have no active issues</h1>
@@ -39,7 +42,7 @@
                 {% endif %}
                 <div class="tab-pane active" id="open-issues" role="tabpanel">
                     <div class="issue-cards">
-                        {% for issue in project.issues.open %}
+                        {% for issue in project.issues.open|issues_sort:sort_by  %}
                             {% include 'components/issue_card/card.html' %}
                         {% empty %}
                             <h1 class="custom-heading">Currently there are no open issues</h1>
@@ -48,7 +51,7 @@
                 </div>
                 <div class="tab-pane" id="closed-issues" role="tabpanel">
                     <div class="issue-cards">
-                        {% for issue in project.issues.closed %}
+                        {% for issue in project.issues.closed|issues_sort:sort_by  %}
                             {% include 'components/issue_card/card.html' %}
                         {% empty %}
                             <h1 class="custom-heading">Currently there are no closed issues</h1>
@@ -57,7 +60,7 @@
                 </div>
                 <div class="tab-pane" id="all-issues" role="tabpanel">
                     <div class="issue-cards">
-                        {% for issue in project.issues.all %}
+                        {% for issue in project.issues.all|issues_sort:sort_by  %}
                             {% include 'components/issue_card/card.html' %}
                         {% empty %}
                             <h1 class="custom-heading">Currently there are no issues</h1>
@@ -70,4 +73,5 @@
 {% endblock content %}
 {% block scripts %}
     <script src="{% static 'js/status_setter.js' %}"></script>
+    <script src="{% static 'js/issue_sorter.js' %}"></script>
 {% endblock scripts %}
