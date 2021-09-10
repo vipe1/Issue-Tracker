@@ -26,6 +26,11 @@ class ProjectDetailsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserInProje
     context_object_name = 'project'
     template_name = 'projects/project_details.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['sort_by'] = self.request.GET.get('sort')
+        return context
+
 
 class ProjectSettingsView(ProjectSidebarLinks, HierarchicalSlugMixin, UserIsOwnerMixin, UpdateView):
     model = Project

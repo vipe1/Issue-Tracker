@@ -1,0 +1,25 @@
+<button class="btn btn-secondary dropdown-toggle" type="button" id="sort-dropdown-button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sort by
+</button>
+<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="padding: 10px">
+    <form id="sort-dropdown">
+        <li><div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="asc" checked>
+            <label class="form-check-label" for="flexRadioDefault1">Ascending</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="desc">
+            <label class="form-check-label" for="flexRadioDefault2">Descending</label>
+        </div></li>
+        <li><hr class="dropdown-divider"></li>
+
+        <li><a class="dropdown-item srt" data-sorter="name" href="#">Name</a></li>
+        <li><a class="dropdown-item srt" data-sorter="description" href="#">Description</a></li>
+        <li><a class="dropdown-item srt" data-sorter="created_at" href="#">Creation date</a></li>
+        <li><hr class="dropdown-divider"></li>
+
+        <li><a class="dropdown-item srt" data-sorter="type" href="#">Type</a></li>
+        <li><a class="dropdown-item srt" data-sorter="priority" href="#">Priority</a></li>
+        <li><a class="dropdown-item srt" data-sorter="status" href="#">Status</a></li>
+    </form>
+</ul>

@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load project_extras %}
 
 {% block title %} - Dashboard{% endblock title %}
 {% block content %}
@@ -8,9 +9,12 @@
         <div class="layout-content">
             <div class="layout-heading">
                 <p>Your active issues from all projects</p>
+                <div id="dashboard-sort" class="ml-2" style="text-shadow: none; font-weight: normal">
+                    {% include 'components/issues_sort_dropdown.html' %}
+                </div>
             </div>
             <div class="issue-cards">
-                {% for issue in user.assigned_issues.active %}
+                {% for issue in user.assigned_issues.active|issues_sort:sort_by %}
                     {% include 'components/issue_card/card.html' %}
                 {% empty %}
                     <h1 class="custom-heading">Currently you have no active issues</h1>
@@ -22,4 +26,5 @@
 
 {% block scripts %}
     <script src="{% static 'js/status_setter.js' %}"></script>
-{% endblock %}
+    <script src="{% static 'js/issue_sorter.js' %}"></script>
+{% endblock scripts %}
